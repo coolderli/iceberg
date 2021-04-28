@@ -60,7 +60,7 @@ import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Test;
 
-import static org.apache.iceberg.spark.data.TestHelpers.assertEqualsUnsafe;
+import static org.apache.iceberg.util.TestHelpers.assertEqualsUnsafe;
 import static org.apache.iceberg.types.Types.NestedField.required;
 
 public class TestSparkParquetReader extends AvroDataTest {

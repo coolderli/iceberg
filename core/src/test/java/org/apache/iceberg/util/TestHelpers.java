@@ -1,23 +1,18 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
-package org.apache.iceberg.spark.data;
+package org.apache.iceberg.util;
 
 import java.math.BigDecimal;
 import java.nio.ByteBuffer;
@@ -92,7 +87,7 @@ public class TestHelpers {
       for (int i = 0; i < fields.size(); i += 1) {
         Type fieldType = fields.get(i).type();
         Object expectedValue = rec.get(i);
-        Object actualValue = row.isNullAt(i) ? null : row.get(i, convert(fieldType));
+        Object actualValue = row.isNullAt(i) ? null : row.get(i, SparkSchemaUtil.convert(fieldType));
         assertEqualsUnsafe(fieldType, expectedValue, actualValue);
 
         if (checkArrowValidityVector) {
@@ -204,13 +199,13 @@ public class TestHelpers {
       case LIST:
         Assert.assertTrue("Should expect a Collection", expected instanceof Collection);
         Assert.assertTrue("Should be a Seq", actual instanceof Seq);
-        List<?> asList = seqAsJavaListConverter((Seq<?>) actual).asJava();
+        List<?> asList = JavaConverters.seqAsJavaListConverter((Seq<?>) actual).asJava();
         assertEqualsSafe(type.asNestedType().asListType(), (Collection) expected, asList);
         break;
       case MAP:
         Assert.assertTrue("Should expect a Collection", expected instanceof Map);
         Assert.assertTrue("Should be a Map", actual instanceof scala.collection.Map);
-        Map<String, ?> asMap = mapAsJavaMapConverter(
+        Map<String, ?> asMap = JavaConverters.mapAsJavaMapConverter(
             (scala.collection.Map<String, ?>) actual).asJava();
         assertEqualsSafe(type.asNestedType().asMapType(), (Map<String, ?>) expected, asMap);
         break;
@@ -226,7 +221,7 @@ public class TestHelpers {
       Type fieldType = fields.get(i).type();
 
       Object expectedValue = rec.get(i);
-      Object actualValue = row.isNullAt(i) ? null : row.get(i, convert(fieldType));
+      Object actualValue = row.isNullAt(i) ? null : row.get(i, SparkSchemaUtil.convert(fieldType));
 
       assertEqualsUnsafe(fieldType, expectedValue, actualValue);
     }
@@ -237,7 +232,7 @@ public class TestHelpers {
     List<?> expectedElements = Lists.newArrayList(expected);
     for (int i = 0; i < expectedElements.size(); i += 1) {
       Object expectedValue = expectedElements.get(i);
-      Object actualValue = actual.get(i, convert(elementType));
+      Object actualValue = actual.get(i, SparkSchemaUtil.convert(elementType));
 
       assertEqualsUnsafe(elementType, expectedValue, actualValue);
     }
@@ -253,8 +248,8 @@ public class TestHelpers {
 
     for (int i = 0; i < expectedElements.size(); i += 1) {
       Map.Entry<?, ?> expectedPair = expectedElements.get(i);
-      Object actualKey = actualKeys.get(i, convert(keyType));
-      Object actualValue = actualValues.get(i, convert(keyType));
+      Object actualKey = actualKeys.get(i, SparkSchemaUtil.convert(keyType));
+      Object actualValue = actualValues.get(i, SparkSchemaUtil.convert(keyType));
 
       assertEqualsUnsafe(keyType, expectedPair.getKey(), actualKey);
       assertEqualsUnsafe(valueType, expectedPair.getValue(), actualValue);
@@ -594,11 +589,11 @@ public class TestHelpers {
   }
 
   private static <K, V> Map<K, V> toJavaMap(scala.collection.Map<K, V> map) {
-    return map == null ? null : mapAsJavaMapConverter(map).asJava();
+    return map == null ? null : JavaConverters.mapAsJavaMapConverter(map).asJava();
   }
 
   private static List toList(Seq<?> val) {
-    return val == null ? null : seqAsJavaListConverter(val).asJava();
+    return val == null ? null : JavaConverters.seqAsJavaListConverter(val).asJava();
   }
 
   private static void assertEqualBytes(String context, byte[] expected,
@@ -611,7 +606,7 @@ public class TestHelpers {
   }
 
   static void assertEquals(Schema schema, Object expected, Object actual) {
-    assertEquals("schema", convert(schema), expected, actual);
+    assertEquals("schema", SparkSchemaUtil.convert(schema), expected, actual);
   }
 
   private static void assertEquals(String context, DataType type, Object expected, Object actual) {

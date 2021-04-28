@@ -38,7 +38,7 @@ import org.apache.spark.sql.vectorized.ColumnarBatch;
 import org.junit.Assert;
 import org.junit.Test;
 
-import static org.apache.iceberg.spark.data.TestHelpers.assertEquals;
+import static org.apache.iceberg.util.TestHelpers.assertEquals;
 import static org.apache.iceberg.types.Types.NestedField.required;
 
 public class TestSparkOrcReader extends AvroDataTest {

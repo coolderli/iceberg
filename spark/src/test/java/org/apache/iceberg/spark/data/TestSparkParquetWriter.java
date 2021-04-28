@@ -29,6 +29,7 @@ import org.apache.iceberg.io.FileAppender;
 import org.apache.iceberg.parquet.Parquet;
 import org.apache.iceberg.spark.SparkSchemaUtil;
 import org.apache.iceberg.types.Types;
+import org.apache.iceberg.util.TestHelpers;
 import org.apache.spark.sql.catalyst.InternalRow;
 import org.junit.Assert;
 import org.junit.Rule;

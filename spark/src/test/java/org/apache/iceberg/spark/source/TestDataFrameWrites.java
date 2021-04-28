@@ -68,8 +68,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 import static org.apache.iceberg.spark.SparkSchemaUtil.convert;
-import static org.apache.iceberg.spark.data.TestHelpers.assertEqualsSafe;
-import static org.apache.iceberg.spark.data.TestHelpers.assertEqualsUnsafe;
+import static org.apache.iceberg.util.TestHelpers.assertEqualsSafe;
+import static org.apache.iceberg.util.TestHelpers.assertEqualsUnsafe;
 
 @RunWith(Parameterized.class)
 public abstract class TestDataFrameWrites extends AvroDataTest {

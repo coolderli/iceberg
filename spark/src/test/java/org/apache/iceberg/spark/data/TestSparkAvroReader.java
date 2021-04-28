@@ -32,7 +32,7 @@ import org.apache.iceberg.relocated.com.google.common.collect.Lists;
 import org.apache.spark.sql.catalyst.InternalRow;
 import org.junit.Assert;
 
-import static org.apache.iceberg.spark.data.TestHelpers.assertEqualsUnsafe;
+import static org.apache.iceberg.util.TestHelpers.assertEqualsUnsafe;
 
 public class TestSparkAvroReader extends AvroDataTest {
   @Override
